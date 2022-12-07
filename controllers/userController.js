@@ -37,7 +37,6 @@ class UserController {
         const user = await User.create({
             email,
             password: hashPassword,
-            token: token,
         });
         const wishlist = await Wishlist.create({ userId: user.id });
 
@@ -64,20 +63,12 @@ class UserController {
         }
 
         const token = generateJwt(user.id, user.email);
-        user.token = token;
-
-        await user.save();
 
         return res.json({ token });
     }
 
     async check(req, res, next) {
-        const userReq = req.user.email;
-        const user = await User.findOne({ where: { userReq } });
         const token = generateJwt(req.user.id, req.user.email);
-
-        user.token = token;
-        user.save();
 
         return res.json({ token });
     }
