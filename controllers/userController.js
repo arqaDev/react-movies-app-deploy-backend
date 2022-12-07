@@ -32,13 +32,10 @@ class UserController {
         }
 
         // make hash of password, add data about user into DB, create wishlist for new user, make generate of token
-        const token = generateJwt(user.id, user.email);
         const hashPassword = await bcrypt.hash(password, 5);
-        const user = await User.create({
-            email,
-            password: hashPassword,
-        });
+        const user = await User.create({ email, password: hashPassword });
         const wishlist = await Wishlist.create({ userId: user.id });
+        const token = generateJwt(user.id, user.email);
 
         return res.json({ token });
     }
